@@ -1,0 +1,83 @@
+package Amazing_Good_Job;
+
+import org.testng.annotations.Test;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.testng.annotations.BeforeClass;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.AfterClass;
+
+public class Register_User_Website {
+	WebDriver driver;
+
+	@BeforeClass
+	public void beforeClass() {
+//		setup chrome
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+	}
+
+	@Test
+	public void Register() {
+
+//	  	launch browser and open http://automationpractice.com/index.php
+		driver.get("http://automationpractice.com/index.php");
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
+//	  	click button sign in
+		driver.findElement(By.className("login")).click();
+
+//	  	input email and submit
+		driver.findElement(By.id("email_create")).sendKeys("son814349@tes.com");
+		driver.findElement(By.id("SubmitCreate")).click();
+
+//	  	input fist name , last name and password in valid
+		driver.findElement(By.id("id_gender1")).click();
+		driver.findElement(By.id("customer_firstname")).sendKeys("Vu");
+		driver.findElement(By.id("customer_lastname")).sendKeys("Duc Son");
+		driver.findElement(By.id("passwd")).sendKeys("Son02091997");
+
+//	  	input address and city
+		driver.findElement(By.xpath("//*[@id=\"address1\"]")).sendKeys("Go Vap");
+		driver.findElement(By.xpath("//*[@id=\"city\"]")).sendKeys("HCM");
+
+//	  	select state
+		WebElement element = driver.findElement(By.id("id_state"));
+		Select dropdown = new Select(element);
+		dropdown.selectByIndex(4);
+
+//	 	 input post code 
+		driver.findElement(By.id("postcode")).sendKeys("05503");
+
+//	  	select united states
+		WebElement element2 = driver.findElement(By.id("id_country"));
+		Select dropdown2 = new Select(element2);
+		dropdown2.selectByVisibleText("United States");
+
+//	  	input phone and note and submit register
+		driver.findElement(By.id("phone_mobile")).sendKeys("0373412234");
+		driver.findElement(By.id("alias")).clear();
+		driver.findElement(By.id("alias")).sendKeys("Yes i do");
+		driver.findElement(By.id("submitAccount")).click();
+
+		String userText = driver.findElement(By.xpath("//*[@id=\"header\"]/div[2]/div/div/nav/div[1]/a")).getText();
+
+		// Validate that user has created
+		if (userText.contains("Duc Son")) {
+			System.out.println("User Verified,Test case Passed");
+		} else {
+			System.out.println("User Verification Failed,Test case Failed");
+		}
+	}
+
+	@AfterClass
+//	close browser
+	public void afterClass() {
+		driver.close();
+	}
+
+}
