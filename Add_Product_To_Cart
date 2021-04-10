@@ -1,0 +1,70 @@
+package Automation_Test_Website;
+
+import org.testng.annotations.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.testng.annotations.BeforeClass;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.AfterClass;
+
+public class Add_Product_To_Cart {
+	WebDriver driver;
+  
+  @BeforeClass
+  public void beforeClass() {
+	  WebDriverManager.chromedriver().setup();
+	  driver = new ChromeDriver();
+  }
+  @Test
+  public void Add_product() {
+//	  launch browser and open http://automationpractice.com/index.php
+	  driver.get("http://automationpractice.com/index.php");
+	  
+//	  click Sign in
+	  driver.findElement(By.linkText("Sign in")).click();
+	  
+//	  input account valid and submit
+	  driver.findElement(By.id("email")).sendKeys("Son814349@test.com");
+	  driver.findElement(By.id("passwd")).sendKeys("Son02091997");
+	  driver.findElement(By.id("SubmitLogin")).click();
+	  
+//	  choose catalogies women
+	  driver.findElement(By.linkText("WOMEN")).click();
+	  WebElement img_product = driver.findElement(By.xpath("//*[@id=\"center_column\"]/ul/li[2]/div/div[1]/div/a[1]/img"));
+	  WebElement more_product = driver.findElement(By.xpath("//*[@id=\"center_column\"]/ul/li[2]/div/div[2]/div[2]/a[2]"));
+	  Actions actions = new Actions(driver);
+	  actions.moveToElement(img_product).moveToElement(more_product).click().perform();
+	  
+//	  choose quantity
+	  driver.findElement(By.id("quantity_wanted")).clear();
+	  driver.findElement(By.id("quantity_wanted")).sendKeys("2");
+	  
+//	  choose size
+	  WebElement dropdown = driver.findElement(By.id("group_1"));
+	  Select size_product = new Select(dropdown);
+	  size_product.selectByVisibleText("M");
+    
+//	  choose color and add to cart
+	  driver.findElement(By.id("color_11")).click();
+	  driver.findElement(By.id("add_to_cart")).click();
+	  
+//	  valid product added to cart
+	  String result = driver.findElement(By.xpath("//*[@id=\"layer_cart\"]/div[1]/div[1]/h2")).getText();
+	  if(result.contains("successfully")) {
+		  System.out.println("Add product successfully");
+	  }
+	  else {
+		  System.out.println("Add product failed");
+	  }
+  }
+  @AfterClass
+  public void afterClass() {
+	  driver.close();
+  }
+}
